@@ -1,0 +1,9 @@
+
+You may want to consider changing your batch submission script as follows to speed up your job run next time:
+
+#PBS -l select=1:ncpus=28:mem=0b
+#PBS -l place=free:shared
+#PBS -l walltime=00:05:00
+
+Your group madenci has been charged 00:00:04 for 28 cpus.
+You previously had 22675:38:59.  You now have 22675:37:07 remaining for the queue oc_standard

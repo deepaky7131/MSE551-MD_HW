@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#PBS -N CristobT
+###PBS -m bea
+###PBS -M 
+##PBS -W group_list=krishna
+#PBS -W group_list=deymier
+#PBS -q windfall
+##PBS -q standard
+###PBS -l select=1:ncpus=12:mem=135gb
+#PBS -l select=10:ncpus=28:mem=168gb:pcmem=6gb
+#PBS -l place=free:shared
+#PBS -l walltime=20:00:00
+#PBS -l cput=5600:00:00
+###PBS -l pvmem=135gb
+
+
+cd $PBS_O_WORKDIR
+module load lammps/gcc/17Nov16 
+export MPI_DSM_DISTRIBUTE
+
+export OMP_NUM_THREADS 1
+
+
+mpirun -np 280 lmp_mpi-gcc -sf opt < in.tensile > out.tensile
+

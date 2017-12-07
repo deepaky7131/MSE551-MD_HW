@@ -1,0 +1,242 @@
+LAMMPS (17 Nov 2016)
+# --------------- INITIALIZATION ------------------
+clear
+units 		metal
+dimension	3
+boundary	p	p    p
+atom_style	atomic
+
+# ------------------ ATOM DEFINITION -------------------
+variable ao equal 4
+
+lattice         fcc 4
+Lattice spacing in x,y,z = 4 4 4
+region		simbox block 0 1 0 1 0 1 units lattice
+
+create_box	1 simbox
+Created orthogonal box = (0 0 0) to (4 4 4)
+  1 by 1 by 1 MPI processor grid
+
+lattice 	fcc 4  orient x 1 0 0 orient y 0 1 0 orient z 0 0 1
+Lattice spacing in x,y,z = 4 4 4
+create_atoms	1 region simbox
+Created 4 atoms
+replicate 1 1 1
+  orthogonal box = (0 0 0) to (4 4 4)
+  1 by 1 by 1 MPI processor grid
+  4 atoms
+# ------------------------ FORCE FIELDS -----------------------
+pair_style	eam/alloy
+pair_coeff * * AlCu.eam.alloy Al
+Reading potential file AlCu.eam.alloy with DATE: 2008-10-01
+#---------------------------Settings----------------------------
+compute csym all centro/atom fcc
+compute eng all pe/atom
+compute eatoms all reduce sum c_eng
+
+#----------------------Run Minimization-------------------------
+reset_timestep	0
+
+thermo 10
+thermo_style custom step pe lx ly lz press pxx pyy pzz c_eatoms
+
+dump 1 all custom 400 dump.relax.1.* id type xs ys zs c_csym c_eng
+
+min_style cg
+minimize 1e-15 1e-15 5000 5000
+WARNING: Resetting reneighboring criteria during minimization (../min.cpp:168)
+Neighbor list info ...
+  2 neighbor list requests
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.6825
+  ghost atom cutoff = 8.6825
+  binsize = 4.34125 -> bins = 1 1 1
+Memory usage per processor = 5.40705 Mbytes
+Step PotEng Lx Ly Lz Press Pxx Pyy Pzz c_eatoms 
+       0    -13.25036            4            4            4    31455.725    31455.725    31455.725    31455.725    -13.25036 
+       1    -13.25036            4            4            4    31455.725    31455.725    31455.725    31455.725    -13.25036 
+Loop time of 0.000573874 on 1 procs for 1 steps with 4 atoms
+
+0.0% CPU use with 1 MPI tasks x no OpenMP threads
+
+Minimization stats:
+  Stopping criterion = quadratic factors are zero
+  Energy initial, next-to-last, final = 
+        -13.2503597474     -13.2503597474     -13.2503597474
+  Force two-norm initial, final = 1.12735e-16 1.12735e-16
+  Force max component initial, final = 6.63532e-17 6.63532e-17
+  Final line search alpha, max atom move = 1 6.63532e-17
+  Iterations, force evaluations = 1 2
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 5.1022e-05 | 5.1022e-05 | 5.1022e-05 |   0.0 |  8.89
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 1.2159e-05 | 1.2159e-05 | 1.2159e-05 |   0.0 |  2.12
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0.0005107  |            |       | 88.99
+
+Nlocal:    4 ave 4 max 4 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    662 ave 662 max 662 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    352 ave 352 max 352 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:  704 ave 704 max 704 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 704
+Ave neighs/atom = 176
+Neighbor list builds = 0
+Dangerous builds = 0
+
+run 0
+WARNING: No fixes defined, atoms won't move (../verlet.cpp:55)
+Neighbor list info ...
+  2 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.6825
+  ghost atom cutoff = 8.6825
+  binsize = 4.34125 -> bins = 1 1 1
+Memory usage per processor = 4.28205 Mbytes
+Step PotEng Lx Ly Lz Press Pxx Pyy Pzz c_eatoms 
+       1    -13.25036            4            4            4    31455.725    31455.725    31455.725    31455.725    -13.25036 
+Loop time of 0 on 1 procs for 0 steps with 4 atoms
+
+0.0% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0          |            |       |  0.00
+
+Nlocal:    4 ave 4 max 4 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    662 ave 662 max 662 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    352 ave 352 max 352 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:  704 ave 704 max 704 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 704
+Ave neighs/atom = 176
+Neighbor list builds = 0
+Dangerous builds = 0
+undump 1
+
+#variable N equal count(all), counts the total number of atoms in the cell
+#the total number of atoms is stored to the variable No
+
+variable N equal count(all)
+variable No equal $N
+variable No equal 4
+
+#variable E equal "c_eatoms" computes the initial energy of the cell system before the interstitial
+#E is needed to store the initial energy of the system to the variable Eo
+
+variable E equal "c_eatoms"
+variable Eo equal $E
+variable Eo equal -13.2503597474367
+#---------------------------------------------------------------
+variable r2 equal sqrt(${ao}^2+${ao}^2)/4
+variable r2 equal sqrt(4^2+${ao}^2)/4
+variable r2 equal sqrt(4^2+4^2)/4
+#r2 is the radius of the copper atom
+#region select sphere 0 0 0 ${r2} units box
+create_atoms 1 single 0 -1.8075 0 units box
+Created 0 atoms
+# (0, -1.8075, 0) is the location of the inserted atom
+# -1.8075 is half of the lattice (see figure 2)
+#---------------------------------------------------------------
+reset_timestep	0
+
+thermo 10
+thermo_style custom step pe lx ly lz press pxx pyy pzz c_eatoms
+
+dump 1 all custom 400 dump.relax.2.* id type xs ys zs c_csym c_eng
+
+min_style cg
+minimize 1e-15 1e-15 5000 5000
+WARNING: Resetting reneighboring criteria during minimization (../min.cpp:168)
+Neighbor list info ...
+  2 neighbor list requests
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.6825
+  ghost atom cutoff = 8.6825
+  binsize = 4.34125 -> bins = 1 1 1
+Memory usage per processor = 5.40705 Mbytes
+Step PotEng Lx Ly Lz Press Pxx Pyy Pzz c_eatoms 
+       0    -13.25036            4            4            4    31455.725    31455.725    31455.725    31455.725    -13.25036 
+       1    -13.25036            4            4            4    31455.725    31455.725    31455.725    31455.725    -13.25036 
+Loop time of 0.000534058 on 1 procs for 1 steps with 4 atoms
+
+187.2% CPU use with 1 MPI tasks x no OpenMP threads
+
+Minimization stats:
+  Stopping criterion = quadratic factors are zero
+  Energy initial, next-to-last, final = 
+        -13.2503597474     -13.2503597474     -13.2503597474
+  Force two-norm initial, final = 1.12735e-16 1.12735e-16
+  Force max component initial, final = 6.63532e-17 6.63532e-17
+  Final line search alpha, max atom move = 1 6.63532e-17
+  Iterations, force evaluations = 1 2
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 4.9829e-05 | 4.9829e-05 | 4.9829e-05 |   0.0 |  9.33
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 1.1444e-05 | 1.1444e-05 | 1.1444e-05 |   0.0 |  2.14
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0.0004728  |            |       | 88.53
+
+Nlocal:    4 ave 4 max 4 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    662 ave 662 max 662 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    352 ave 352 max 352 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:  704 ave 704 max 704 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 704
+Ave neighs/atom = 176
+Neighbor list builds = 0
+Dangerous builds = 0
+
+#variable Ef equal "c_eatoms" computes the final energy of the cell system after the interstitial
+#The final energy is stored to the variable Ef
+
+variable Ef equal "c_eatoms"
+variable Ei equal (${Ef}-((${No}+1)/${No})*${Eo})
+variable Ei equal (-13.2503597474367-((${No}+1)/${No})*${Eo})
+variable Ei equal (-13.2503597474367-((4+1)/${No})*${Eo})
+variable Ei equal (-13.2503597474367-((4+1)/4)*${Eo})
+variable Ei equal (-13.2503597474367-((4+1)/4)*-13.2503597474367)
+#---------------------------------------------
+
+######################################
+# SIMULATION DONE
+print "All done"
+All done
+print "Total number of atoms = ${No}"
+Total number of atoms = 4
+print "Initial energy of atoms = ${Eo}"
+Initial energy of atoms = -13.2503597474367
+print "Final energy of atoms = ${Ef}"
+Final energy of atoms = -13.2503597474367
+print "Interstitial formation energy = ${Ei}"
+Interstitial formation energy = 3.31258993685918
+Total wall time: 0:00:00

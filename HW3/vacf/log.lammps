@@ -1,0 +1,93 @@
+LAMMPS (17 Nov 2016)
+# Affiliation: Dept. Materials Science and Engineering
+# University of Arizona
+# Abduljabar Alsayoud
+
+
+# Units energy:eV time:ps distance:angstrom flux:energy*velocity
+#---------Sim variables---------------
+variable fileprefix string  nvt
+variable temp_s equal '300.0'
+variable press_s equal '1.0'
+
+#-----------Setup----------------------
+units metal            #Energy = eV , Distance= Angstroms
+dimension 3
+boundary p p p         #Periodic boundary conditions
+atom_style atomic
+
+# Read config files
+
+read_data data.${fileprefix}
+read_data data.nvt
+  orthogonal box = (-16.3567 -16.3567 -16.3567) to (24.4346 24.4346 24.4346)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  4000 atoms
+
+pair_style eam/alloy
+pair_coeff * *  Al99.eam.alloy Al
+neighbor 2.0 bin
+neigh_modify delay 10 check yes
+
+
+
+#--------- NVE-------
+
+reset_timestep 0
+timestep 0.001
+velocity all create 300 1518772
+
+fix 1 all nve
+
+compute v all vacf
+
+fix 2 all ave/time 5 1 5 c_v[1] c_v[2] c_v[3] c_v[4] file vacf.dat
+
+run 60000
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.28721
+  ghost atom cutoff = 8.28721
+  binsize = 4.1436 -> bins = 10 10 10
+Memory usage per processor = 3.27415 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0          300   -13258.985            0   -13103.911   -7233.4284 
+   60000    314.94564   -13266.713            0   -13103.914   -7412.2228 
+Loop time of 632.959 on 1 procs for 60000 steps with 4000 atoms
+
+Performance: 8.190 ns/day, 2.930 hours/ns, 94.793 timesteps/s
+99.4% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 625.34     | 625.34     | 625.34     |   0.0 | 98.80
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 2.6256     | 2.6256     | 2.6256     |   0.0 |  0.41
+Output  | 2.7895e-05 | 2.7895e-05 | 2.7895e-05 |   0.0 |  0.00
+Modify  | 3.2601     | 3.2601     | 3.2601     |   0.0 |  0.52
+Other   |            | 1.731      |            |       |  0.27
+
+Nlocal:    4000 ave 4000 max 4000 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    7896 ave 7896 max 7896 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    278012 ave 278012 max 278012 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 278012
+Ave neighs/atom = 69.503
+Neighbor list builds = 0
+Dangerous builds = 0
+
+unfix 1
+unfix 2
+
+######################################
+# SIMULATION DONE
+print "All done"
+All done
+Total wall time: 0:10:33

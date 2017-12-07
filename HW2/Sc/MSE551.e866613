@@ -1,0 +1,4 @@
+ModuleCmd_Load.c(208):ERROR:105: Unable to locate a modulefile for 'peridigm/1.4.0'
+ModuleCmd_Load.c(208):ERROR:105: Unable to locate a modulefile for 'openmpi/1.4.4'
+/pbs/ocelote/i5n18/mom_priv/jobs/866613.head1.cm.cluster.SC: line 27: setenv: command not found
+/pbs/ocelote/i5n18/mom_priv/jobs/866613.head1.cm.cluster.SC: line 28: setenv: command not found
